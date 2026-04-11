@@ -67,13 +67,13 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             started = True
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP and dy != 10:
                 dx,dy = 0,-10
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN and dy != -10:
                 dx,dy = 0,10
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT and dx != 10:
                 dx,dy = -10,0
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT and dx != -10:
                 dx,dy = 10,0
 
     if started:
@@ -95,16 +95,13 @@ while running:
         if head in obstacles:
             running = False
 
-    for idx, s in enumerate(snake):
-        if idx == 0:
-            pygame.draw.rect(screen, SNAKE_HEAD, (*s,10,10), border_radius=5)
-            eye_x = s[0] + (7 if dx >= 0 else 2)
-            eye_y = s[1] + (3 if dy <= 0 else 7)
-            if dx == 0 and dy == 0:
-                eye_x, eye_y = s[0] + 7, s[1] + 3
-            pygame.draw.circle(screen, BG_PANEL_DARK, (eye_x, eye_y), 2)
-        else:
-            pygame.draw.rect(screen, SNAKE_BODY, (*s,10,10), border_radius=4)
+        body = snake.copy()
+        body.pop(0)
+        if head in body:
+            running = False
+
+    for s in snake:
+        pygame.draw.rect(screen, green, (*s,10,10))
 
     for o in obstacles:
         screen.blit(obstacle_img,o)
