@@ -123,7 +123,6 @@ while running:
         pygame.draw.rect(screen, pipe_highlight, (pipe[0]+10, 16, 12, pipe[1]-16), border_radius=6)
         pygame.draw.rect(screen, pipe_highlight, (pipe[0]+10, pipe[1]+pipe[2]+6, 12, height - (pipe[1]+pipe[2]+6)), border_radius=6)
         
-        if not crashed and bird_rect.colliderect(top_rect):
         if not crashed and bird_rect.colliderect(top_rect) and not paused:
             crashed = True
             crash_time = pygame.time.get_ticks()
