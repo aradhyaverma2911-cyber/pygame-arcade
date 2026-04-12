@@ -11,7 +11,7 @@ from constants import *
 pygame.init()
 screen = pygame.display.set_mode((width,height))
 clock = pygame.time.Clock()
-font = pygame.font.Font("calibri",30)
+font = pygame.font.SysFont("calibri", 30)
 
 base = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../assets/flappy"))
 
@@ -98,7 +98,7 @@ while running:
         if timer % 60 == 0:
             speed += 0.03
 
-    for pipe in pipes:
+    for pipe in pipes[:]:
         if started and not crashed:
             pipe[0] -= speed
 
