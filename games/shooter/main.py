@@ -29,6 +29,7 @@ enemy1 = pygame.transform.smoothscale(enemy1,(40,40))
 enemy2 = pygame.image.load(os.path.join(base,"enemy2.png")).convert_alpha()
 enemy2 = pygame.transform.smoothscale(enemy2,(40,40))
 player_x = width//2
+player_y = height - 40
 
 bullets = []
 enemies = []
@@ -37,6 +38,7 @@ speed = 0.8
 timer = 0
 score = 0
 started = False
+paused = False
 
 while len(enemies) < 2:
     img = enemy1 if random.randint(0,1)==0 else enemy2
@@ -52,20 +54,35 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             started = True
-            if event.key == pygame.K_SPACE:
-                bullets.append([player_x+15,height-40])
+            if event.key == pygame.K_p:
+                paused = not paused
+            if event.key == pygame.K_SPACE and not paused:
+                bullets.append([player_x+15,player_y])
 
-    if started:
+    if paused:
+        paused_text = font.render("PAUSED", True, white)
+        screen.blit(paused_text, (width//2 - 50,height//2 - 15))
+
+    if started and not paused:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             player_x -= 5
         if keys[pygame.K_RIGHT]:
             player_x += 5
+        if keys[pygame.K_UP]:
+            player_y -= 5
+        if keys[pygame.K_DOWN]:
+            player_y += 5
 
         if player_x > width - 40:
             player_x = width - 40
         elif player_x < 0:
             player_x = 0
+
+        if player_y > height - 40:
+            player_y = height - 40
+        elif player_y < 0:
+            player_y = 0
 
         timer += 1
         if timer % 60 == 0:
@@ -75,18 +92,18 @@ while running:
             img = enemy1 if random.randint(0,1)==0 else enemy2
             enemies.append([random.randint(0,width-40),0,img])
 
-    player_rect = pygame.Rect(player_x,height-40,40,40)
-    screen.blit(player_img,(player_x,height-40))
+    player_rect = pygame.Rect(player_x,player_y,40,40)
+    screen.blit(player_img,(player_x,player_y))
 
     for bullet in bullets[:]:
-        if started:
+        if started and not paused:
             bullet[1] -= 7
         screen.blit(bullet_img,(bullet[0],bullet[1]))
         if bullet[1] < 0:
             bullets.remove(bullet)
 
     for enemy in enemies[:]:
-        if started:
+        if started and not paused:
             enemy[1] += speed
         screen.blit(enemy[2],(enemy[0],enemy[1]))
 
