@@ -104,7 +104,7 @@ while running:
     offset = (bird_h - bird_rect.height) // 2
 
     for pipe in pipes[:]:
-        if started and not crashed:
+        if started and not crashed and not paused:
             pipe[0] -= speed
 
         top_rect = pygame.Rect(pipe[0],0,pipe_width,pipe[1])
@@ -131,12 +131,12 @@ while running:
             crashed = True
             crash_time = pygame.time.get_ticks()
 
-        if pipe[0] < -pipe_width and not crashed:
+        if pipe[0] < -pipe_width and not crashed and not paused:
             pipes.remove(pipe)
             pipes.append(create_pipe(width))
             score += 1
 
-    if started and not crashed:
+    if started and not crashed and not paused:
         if bird_rect.bottom > height or bird_rect.top < 0:
             crashed = True
             crash_time = pygame.time.get_ticks()
